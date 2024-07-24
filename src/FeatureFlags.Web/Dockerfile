@@ -9,10 +9,10 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["FeatureFlags.Web/FeatureFlags.Web.csproj", "FeatureFlags.Web/"]
-RUN dotnet restore "./FeatureFlags.Web/FeatureFlags.Web.csproj"
+COPY ["FeatureFlags.Web.csproj", "."]
+RUN dotnet restore "./FeatureFlags.Web.csproj"
 COPY . .
-WORKDIR "/src/FeatureFlags.Web"
+WORKDIR "/src/."
 RUN dotnet build "./FeatureFlags.Web.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
