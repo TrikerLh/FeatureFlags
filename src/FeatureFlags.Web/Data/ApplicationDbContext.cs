@@ -1,4 +1,4 @@
-﻿using FeatureFlags.Web.Models;
+﻿using FeatureFlags.Web.Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

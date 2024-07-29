@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
-namespace FeatureFlags.Web.Models {
+namespace FeatureFlags.Web.Data.Entities {
     public class FlagEntity {
         [Key] public int Id { get; set; }
         public required string Name { get; set; }

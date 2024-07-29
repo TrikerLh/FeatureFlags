@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using FeatureFlags.Web.Models;
 using FeatureFlags.Web.UseCase;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,11 +9,13 @@ namespace FeatureFlags.Web.Controllers {
     [Route("[controller]")]
     public class FlagsController : Controller
     {
-        private readonly IAddFlagUseCase _addFlagUseCase;
+        private readonly AddFlagUseCase _addFlagUseCase;
+        private readonly GetFlagsUseCase _getFlagsUseCase;
 
-        public FlagsController(IAddFlagUseCase addFlagUseCase)
+        public FlagsController(AddFlagUseCase addFlagUseCase, GetFlagsUseCase getFlagsUseCase)
         {
             _addFlagUseCase = addFlagUseCase;
+            _getFlagsUseCase = getFlagsUseCase;
         }
 
         [HttpGet("create")]
@@ -30,15 +33,13 @@ namespace FeatureFlags.Web.Controllers {
         }
 
         [HttpGet("")]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var listFlags = await _getFlagsUseCase.Execute();
+            return View(new FlagIndexViewModel()
+            {
+                Flags = listFlags
+            });
         }
-    }
-
-    public class FlagViewModel
-    {
-        public string Name { get; set; }
-        public bool IsEnabled { get; set; }
     }
 }

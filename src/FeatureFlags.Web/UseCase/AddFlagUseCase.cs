@@ -1,10 +1,11 @@
 ﻿using System.Security.Claims;
 using FeatureFlags.Web.Data;
+using FeatureFlags.Web.Data.Entities;
 using FeatureFlags.Web.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace FeatureFlags.Web.UseCase {
-    public class AddFlagUseCase : IAddFlagUseCase
+    public class AddFlagUseCase
     {
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -27,10 +28,5 @@ namespace FeatureFlags.Web.UseCase {
             await _applicationDbContext.SaveChangesAsync();
             return true;
         }
-    }
-
-    public interface IAddFlagUseCase
-    {
-        Task<bool> Execute(string flagName, bool isActive);
     }
 }
