@@ -3,6 +3,7 @@ using FeatureFlags.Web.Business.UseCase;
 using FeatureFlags.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ROP;
 
 namespace FeatureFlags.Web.Controllers {
     [Authorize]
@@ -27,9 +28,21 @@ namespace FeatureFlags.Web.Controllers {
         [HttpPost("create")]
         public async Task<IActionResult> AddFlagToDatabase(FlagViewModel request)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            bool isCreated = await _addFlagUseCase.Execute(request.Name, request.IsEnabled);
-            return RedirectToAction("Index");
+            Result<bool> isCreated = await _addFlagUseCase.Execute(request.Name, request.IsEnabled);
+            if (isCreated.Success)
+            {
+                return RedirectToAction("Index");
+            }
+
+            return View("Create", new FlagViewModel()
+            {
+                Error = isCreated.Errors.First().Message,
+                IsEnabled = request.IsEnabled,
+                Name = request.Name
+            });
+            //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //bool isCreated = await _addFlagUseCase.Execute(request.Name, request.IsEnabled);
+            //return RedirectToAction("Index");
         }
 
         [HttpGet("")]
