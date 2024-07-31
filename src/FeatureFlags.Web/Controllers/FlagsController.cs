@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
+using FeatureFlags.Web.Business.UseCase;
 using FeatureFlags.Web.Models;
-using FeatureFlags.Web.UseCase;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

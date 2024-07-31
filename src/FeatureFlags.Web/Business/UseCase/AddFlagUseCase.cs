@@ -1,27 +1,24 @@
-﻿using System.Security.Claims;
+﻿using FeatureFlags.Web.Business.UserInfo;
 using FeatureFlags.Web.Data;
 using FeatureFlags.Web.Data.Entities;
-using FeatureFlags.Web.Models;
-using Microsoft.EntityFrameworkCore;
 
-namespace FeatureFlags.Web.UseCase {
+namespace FeatureFlags.Web.Business.UseCase {
     public class AddFlagUseCase
     {
         private readonly ApplicationDbContext _applicationDbContext;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IFlagUserDetails _userDetails;
 
-        public AddFlagUseCase(ApplicationDbContext applicationDbContext, IHttpContextAccessor httpContextAccessor)
+        public AddFlagUseCase(ApplicationDbContext applicationDbContext, IFlagUserDetails userDetails)
         {
             _applicationDbContext = applicationDbContext;
-            _httpContextAccessor = httpContextAccessor;
+            _userDetails = userDetails;
         }
         public async Task<bool> Execute(string flagName, bool isActive)
         {
-            string userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             FlagEntity entity = new()
             {
                 Name = flagName,
-                UserId = userId,
+                UserId = _userDetails.UserId,
                 Value = isActive
             };
             var response = await _applicationDbContext.Flags.AddAsync(entity);

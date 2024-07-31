@@ -1,5 +1,6 @@
+using FeatureFlags.Web.Business.UseCase;
+using FeatureFlags.Web.Business.UserInfo;
 using FeatureFlags.Web.Data;
-using FeatureFlags.Web.UseCase;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,9 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddScoped<AddFlagUseCase>();
 builder.Services.AddScoped<GetFlagsUseCase>();
+
+builder.Services.AddScoped<IFlagUserDetails, FlagUserDetails>();
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

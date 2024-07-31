@@ -1,25 +1,24 @@
-﻿using System.Security.Claims;
+﻿using FeatureFlags.Web.Business.UserInfo;
 using FeatureFlags.Web.Data;
 using FeatureFlags.Web.DTOs;
 using Microsoft.EntityFrameworkCore;
 
-namespace FeatureFlags.Web.UseCase {
+namespace FeatureFlags.Web.Business.UseCase {
     public class GetFlagsUseCase
     {
         private readonly ApplicationDbContext _applicationDbContext;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        public GetFlagsUseCase(ApplicationDbContext applicationDbContext, IHttpContextAccessor httpContextAccessor)
+        private readonly IFlagUserDetails _userDetails;
+        public GetFlagsUseCase(ApplicationDbContext applicationDbContext, IFlagUserDetails userDetails)
         {
             _applicationDbContext = applicationDbContext;
-            _httpContextAccessor = httpContextAccessor;
+            _userDetails = userDetails;
         }
 
         public async Task<List<FlagDto>> Execute()
         {
-            string userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             var response = await _applicationDbContext.Flags
-                .Where(a => a.UserId == userId)
+                .Where(a => a.UserId == _userDetails.UserId)
                 .AsNoTracking()
                 .ToListAsync();
 
