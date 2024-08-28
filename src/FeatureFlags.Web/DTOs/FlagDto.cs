@@ -1,3 +1,7 @@
 ﻿namespace FeatureFlags.Web.DTOs;
 
-public record FlagDto(string Name, bool IsEnabled);
+public class FlagDto {
+    public string Name { get; set; }
+    public bool IsEnabled { get; set; }
+    public int Id { get; set; }
+}
