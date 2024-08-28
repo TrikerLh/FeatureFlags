@@ -22,7 +22,8 @@ public class DeleteFlagUseCase(ApplicationDbContext applicationDbContext, IFlagU
 
 	private async Task<Result<bool>> DeleteEntity(FlagEntity entity)
 	{
-		applicationDbContext.Flags.Remove(entity);
+		entity.IsDeleted = true;
+		entity.DeletedtimeUtc = DateTime.UtcNow;
 		await applicationDbContext.SaveChangesAsync();
 		return true;
 	}

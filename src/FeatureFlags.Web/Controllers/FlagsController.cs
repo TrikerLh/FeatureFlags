@@ -12,27 +12,28 @@ namespace FeatureFlags.Web.Controllers {
     public class FlagsController : Controller
     {
         private readonly AddFlagUseCase _addFlagUseCase;
-        private readonly GetFlagsUseCase _getFlagsUseCase;
+        private readonly GetFlagsPaginatedUseCase _getFlagsPaginatedUseCase;
         private readonly GetSingleFlagUseCase _getSingleFlagUseCase;
         private readonly UpdateFlagUseCase _updateFlagUseCase;
         private readonly DeleteFlagUseCase _deleteFlagUseCase;
 
-        public FlagsController(AddFlagUseCase addFlagUseCase, GetFlagsUseCase getFlagsUseCase, GetSingleFlagUseCase getSingleFlagUseCase, UpdateFlagUseCase updateFlagUseCase, DeleteFlagUseCase deleteFlagUseCase)
+        public FlagsController(AddFlagUseCase addFlagUseCase, GetFlagsPaginatedUseCase getFlagsPaginatedUseCase, GetSingleFlagUseCase getSingleFlagUseCase, UpdateFlagUseCase updateFlagUseCase, DeleteFlagUseCase deleteFlagUseCase)
         {
             _addFlagUseCase = addFlagUseCase;
-            _getFlagsUseCase = getFlagsUseCase;
+            _getFlagsPaginatedUseCase = getFlagsPaginatedUseCase;
             _getSingleFlagUseCase = getSingleFlagUseCase;
             _updateFlagUseCase = updateFlagUseCase;
             _deleteFlagUseCase = deleteFlagUseCase;
         }
 
         [HttpGet("")]
-        public async Task<IActionResult> Index()
+        [HttpGet("{page:int}")]
+        public async Task<IActionResult> Index(string? search, int page = 1, int size = 5)
         {
-	        var listFlags = await _getFlagsUseCase.Execute();
+	        var listFlags = (await _getFlagsPaginatedUseCase.Execute(search, page, size)).Throw();
 	        return View(new FlagIndexViewModel()
 	        {
-		        Flags = listFlags
+		        Pagination = listFlags
 	        });
         }
 
